@@ -9,6 +9,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  google_fonts: ^6.2.1
+  hexcolor: ^3.0.1
 
 dev_dependencies:
   flutter_test:
@@ -20,12 +22,3 @@ flutter:
 
   assets:
     - assets/images/
-
-  fonts:
-    - family: Sarabun
-      fonts:
-        - asset: assets/fonts/Sarabun-Bold.ttf
-        - asset: assets/fonts/Sarabun-Medium.ttf
-        - asset: assets/fonts/Sarabun-Regular.ttf
-        - asset: assets/fonts/Sarabun-Light.ttf
-        - asset: assets/fonts/Sarabun-Thin.ttf
