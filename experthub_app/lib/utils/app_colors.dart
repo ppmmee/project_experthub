@@ -10,10 +10,10 @@ class AppColors {
 
   static Color kBackground = HexColor('#F5F5F5');
 
-  static Color kTitle = HexColor('#000');
+  static Color kTitle = HexColor('#000000');
   static Color kSubTitle = HexColor('#6C757D');
 
   static Color kWhite = HexColor('#FFFFFF');
-  static Color kBlack = HexColor('#000');
+  static Color kBlack = HexColor('#000000');
   static Color kGrey = HexColor('#E5E5E5');
 }
