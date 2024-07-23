@@ -1,5 +1,5 @@
 name: experthub_app
-description: "A new Flutter project."
+description: 'A new Flutter project.'
 publish_to: 'none'
 version: 0.1.0
 
@@ -17,3 +17,15 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+  assets:
+    - assets/images/
+
+  fonts:
+    - family: Sarabun
+      fonts:
+        - asset: assets/fonts/Sarabun-Bold.ttf
+        - asset: assets/fonts/Sarabun-Medium.ttf
+        - asset: assets/fonts/Sarabun-Regular.ttf
+        - asset: assets/fonts/Sarabun-Light.ttf
+        - asset: assets/fonts/Sarabun-Thin.ttf
