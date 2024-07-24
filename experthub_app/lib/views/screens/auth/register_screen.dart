@@ -1,5 +1,7 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:get/get.dart';
 
 // Utils
 import '../../../utils/app_colors.dart';
@@ -18,28 +20,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
+  late DatabaseReference dbRef;
+
+  @override
+  void initState() {
+    super.initState();
+    dbRef = FirebaseDatabase.instance.ref().child('Member');
+  }
 
   void clearDataField() {
     _emailController.clear();
     _passwordController.clear();
     _confirmPasswordController.clear();
-  }
-  
-  @override
-  Widget build(BuildContext context) {
-    return buildCanvas(
-      Form(
-        key: _formKey,
-        child: Column(
-          children: [
-            buildTitle(),
-            buildForm(),
-            buildRegisterButton(),
-            buildLoginLabel(),
-          ],
-        ),
-      )
-    );
   }
 
   Widget buildCanvas(Widget child) {
@@ -74,25 +66,38 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
+  String? validateEmail(String? value) {
+    return value!.isEmpty ? 'กรุณากรอกอีเมล' : !GetUtils.isEmail(value) ? 'รูปแบบอีเมลไม่ถูกต้อง' : null;
+  }
+
+  String? validatePassword(String? value) {
+    return !GetUtils.isLengthGreaterOrEqual(value!, 6) ? 'รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร' : null;
+  }
+
+  String? validateConfirmPassword(String? value) {
+    return !GetUtils.isLengthGreaterOrEqual(value!, 6) ? 'รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร' : value != _passwordController.text ? 'รหัสผ่านไม่ตรงกัน' : null;
+  }
+
   Widget buildForm() {
     return Container(
       margin: const EdgeInsets.only(top: 50),
       child: Column(
         children: [
-          buildEntryField(Icons.email, 'อีเมล', _emailController),
+          buildEntryField(Icons.email, 'อีเมล', _emailController, validateEmail),
           const SizedBox(height: 20),
-          buildEntryField(Icons.lock, 'รหัสผ่าน', _passwordController, isPassword: true),
+          buildEntryField(Icons.lock, 'รหัสผ่าน', _passwordController, validatePassword, isPassword: true),
           const SizedBox(height: 20),
-          buildEntryField(Icons.lock, 'ยืนยันรหัสผ่าน', _confirmPasswordController, isPassword: true),
+          buildEntryField(Icons.lock, 'ยืนยันรหัสผ่าน', _confirmPasswordController, validateConfirmPassword, isPassword: true),
         ],
       ),
     );
   }
 
-  Widget buildEntryField(IconData icon, String title, TextEditingController controller, {bool isPassword = false}) {
-    return TextField(
+  Widget buildEntryField(IconData icon, String title, TextEditingController controller, String? Function(String?)? validator, {bool isPassword = false}) {
+    return TextFormField(
       controller: controller,
       obscureText: isPassword,
+      validator: validator,
       style: TextStyles.textSmall.copyWith(
         color: AppColors.kBlack.withOpacity(0.6),
         fontWeight: FontWeight.w600,
@@ -128,9 +133,25 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return Container(
       margin: const EdgeInsets.only(top: 20),
       child: ElevatedButton(
-        onPressed: () => {
-          Navigator.pushNamed(context, loginRoute),
-          clearDataField(),
+        onPressed: () {
+          if (!_formKey.currentState!.validate()) {
+            return;
+          }
+
+          String email = _emailController.text;
+          String password = _passwordController.text;
+
+          Map<String, String> userData = {
+            'email': email,
+            'password': password,
+          };
+
+          String emailKey = email.substring(0, email.indexOf('@'));
+          emailKey = emailKey.replaceAll(RegExp(r'[^a-zA-Z0-9]'), '_');
+          dbRef.child(emailKey).set(userData).then((value) {
+            Navigator.pushNamed(context, authRoute);
+            clearDataField();
+          });
         },
         style: ElevatedButton.styleFrom(
           minimumSize: const Size(double.infinity, 40),
@@ -174,6 +195,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
           ],
         ),
       ),
+    );
+  }
+  
+  @override
+  Widget build(BuildContext context) {
+    return buildCanvas(
+      Form(
+        key: _formKey,
+        child: Column(
+          children: [
+            buildTitle(),
+            buildForm(),
+            buildRegisterButton(),
+            buildLoginLabel(),
+          ],
+        ),
+      )
     );
   }
 }
