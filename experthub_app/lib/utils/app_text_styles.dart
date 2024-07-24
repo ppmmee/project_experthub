@@ -30,4 +30,10 @@ class TextStyles {
     color: AppColors.kTitle.withOpacity(0.5),
   );
 
+  static final textVerySmall = GoogleFonts.sarabun(
+    fontSize: 12,
+    fontWeight: FontWeight.w400,
+    color: AppColors.kTitle.withOpacity(0.5),
+  );
+
 }
