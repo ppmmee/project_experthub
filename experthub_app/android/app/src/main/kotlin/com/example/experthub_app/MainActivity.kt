@@ -1,4 +1,4 @@
-package com.example.experthub_app
+package it.ac.mju.itsci.experthub
 
 import io.flutter.embedding.android.FlutterActivity
 
