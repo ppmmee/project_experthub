@@ -95,7 +95,7 @@ class _AuthScreenState extends State<AuthScreen> {
   Widget buildSignUpButton() {
     return OutlinedButton(
       onPressed: () => {
-        // Add sign-up functionality here
+        Navigator.pushNamed(context, registerRoute),
       },
       style: OutlinedButton.styleFrom(
         minimumSize: const Size(double.infinity, 40),

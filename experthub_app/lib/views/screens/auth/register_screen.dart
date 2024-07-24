@@ -1,28 +1,30 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
 
 // Utils
 import '../../../utils/app_colors.dart';
 import '../../../utils/app_text_styles.dart';
 import '../../../utils/routes.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
 
   void clearDataField() {
     _emailController.clear();
     _passwordController.clear();
+    _confirmPasswordController.clear();
   }
-
+  
   @override
   Widget build(BuildContext context) {
     return buildCanvas(
@@ -32,9 +34,8 @@ class _LoginScreenState extends State<LoginScreen> {
           children: [
             buildTitle(),
             buildForm(),
-            buildForgotPasswordLabel(),
-            buildLoginButton(),
-            buildCreateAccountLabel(),
+            buildRegisterButton(),
+            buildLoginLabel(),
           ],
         ),
       )
@@ -66,7 +67,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return Column(
       children: [
         Text(
-          'เข้าสู่ระบบ',
+          'สร้างบัญชีผู้ใช้',
           style: TextStyles.textBold,
         ),
       ],
@@ -81,6 +82,8 @@ class _LoginScreenState extends State<LoginScreen> {
           buildEntryField(Icons.email, 'อีเมล', _emailController),
           const SizedBox(height: 20),
           buildEntryField(Icons.lock, 'รหัสผ่าน', _passwordController, isPassword: true),
+          const SizedBox(height: 20),
+          buildEntryField(Icons.lock, 'ยืนยันรหัสผ่าน', _confirmPasswordController, isPassword: true),
         ],
       ),
     );
@@ -121,33 +124,9 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget buildForgotPasswordLabel() {
+  Widget buildRegisterButton() {
     return Container(
-      margin: const EdgeInsets.only(top: 5),
-      child: Align(
-        alignment: Alignment.centerRight,
-        child: TextButton(
-          onPressed: () => {
-            // Add forgot password functionality here
-          },
-          style: ButtonStyle(
-            overlayColor: WidgetStateProperty.all(Colors.transparent),
-            padding: WidgetStateProperty.all(EdgeInsets.zero),
-          ),
-          child: Text(
-            'ลืมรหัสผ่าน?',
-            style: TextStyles.textVerySmall.copyWith(
-              color: AppColors.kPrimary,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget buildLoginButton() {
-    return Container(
-      margin: const EdgeInsets.only(top: 0),
+      margin: const EdgeInsets.only(top: 20),
       child: ElevatedButton(
         onPressed: () => {
           Navigator.pushNamed(context, loginRoute),
@@ -162,7 +141,7 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
         child: Text(
-          'เข้าสู่ระบบ',
+          'สร้างบัญชีผู้ใช้',
           style: TextStyles.textSmall.copyWith(
             color: AppColors.kWhite,
           ),
@@ -171,24 +150,24 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget buildCreateAccountLabel() {
+  Widget buildLoginLabel() {
     return Container(
       margin: const EdgeInsets.only(top: 15),
       child: RichText(
         text: TextSpan(
           children: [
             TextSpan(
-              text: 'ยังไม่มีบัญชีผู้ใช้? ',
+              text: 'มีบัญชีผู้ใช้แล้ว? ',
               style: TextStyles.textVerySmall,
             ),
             TextSpan(
-              text: 'สมัครสมาชิก',
+              text: 'เข้าสู่ระบบ',
               style: TextStyles.textVerySmall.copyWith(
                 color: AppColors.kBlack.withOpacity(0.6),
                 decoration: TextDecoration.underline,
               ),
               recognizer: TapGestureRecognizer()..onTap = () {
-                Navigator.pushNamed(context, registerRoute);
+                Navigator.pushNamed(context, loginRoute);
                 clearDataField();
               },
             ),
